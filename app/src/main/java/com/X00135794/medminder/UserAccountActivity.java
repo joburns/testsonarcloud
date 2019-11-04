@@ -27,7 +27,7 @@ public class UserAccountActivity extends AppCompatActivity {
         userLogout = findViewById(R.id.btnUserLogin);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = FirebaseUser.getCurrentUser();
+        firebaseUser = firebaseAuth.getCurrentUser();
         userDetails.setText(firebaseUser.getEmail());
 
         userLogout.setOnClickListener(new View.OnClickListener(){
