@@ -24,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText userPassword;
     Button userLogin;
 
-    private FirebaseAuth firebaseAuth;
+    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,11 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressbar.setVisibility(View.GONE);
                         if(task.isSuccessful()){
-                            startActivity(new Intent(LoginActivity.this, UserAccountActivity.class));
+                            if(firebaseAuth.getCurrentUser().isEmailVerified()){
+                                startActivity(new Intent(LoginActivity.this, UserAccountActivity.class));
+                            }else{
+                                Toast.makeText(LoginActivity.this, "Please verify your email address", Toast.LENGTH_LONG).show();
+                            }
                         }else{
                             Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }

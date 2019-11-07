@@ -16,15 +16,15 @@ public class UserAccountActivity extends AppCompatActivity {
     TextView userDetails;
     Button userLogout;
 
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_account);
 
         userDetails = findViewById(R.id.tvUserDetails);
-        userLogout = findViewById(R.id.btnUserLogin);
+        userLogout = findViewById(R.id.btnLogout);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();

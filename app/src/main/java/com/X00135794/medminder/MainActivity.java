@@ -25,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
     EditText password;
     Button signup;
     Button login;
-    private FirebaseAuth firebaseAuth;
+    Button forgotPass;
+    FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         password = findViewById(R.id.etPassword);
         signup = findViewById(R.id.btnSignUp);
         login = findViewById(R.id.btnLogin);
+        forgotPass = findViewById(R.id.btnUserForgotPass);
         toolbar.setTitle(R.string.app_name);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -52,9 +54,22 @@ public class MainActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressbar.setVisibility(View.GONE);
                         if(task.isSuccessful()){
-                            Toast.makeText(MainActivity.this, "Registered successfully", Toast.LENGTH_LONG).show();
-                            email.setText("");
-                            email.setText("");
+                            firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                    if(task.isSuccessful()){
+
+
+                                        Toast.makeText(MainActivity.this, "Registered successfully Please check your email for verification", Toast.LENGTH_LONG).show();
+                                        email.setText("");
+                                        password.setText("");
+                                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                    }else{
+                                        Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
                         }
                         else{
                             Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -69,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            }
+        });
+
+        forgotPass.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ForgottenPasswordActivity.class));
             }
         });
 
