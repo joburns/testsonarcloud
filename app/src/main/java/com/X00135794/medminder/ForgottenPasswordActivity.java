@@ -48,7 +48,7 @@ public class ForgottenPasswordActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             Toast.makeText(ForgottenPasswordActivity.this, "Password reset email was sent to your email", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(ForgottenPasswordActivity.this, LoginActivity.class));
+                            startActivity(new Intent(ForgottenPasswordActivity.this, MainActivity.class));
                         } else {
                             Toast.makeText(ForgottenPasswordActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
 
