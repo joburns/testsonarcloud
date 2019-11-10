@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         progressbar = findViewById(R.id.progressBar);
         userEmail = findViewById(R.id.etUserEmail);
         userPassword = findViewById(R.id.etUserPassword);
-        userLogin = findViewById(R.id.btnUserLogin);
+        userLogin = findViewById(R.id.btnULogin);
 
         toolbar.setTitle("Login");
         firebaseAuth = FirebaseAuth.getInstance();

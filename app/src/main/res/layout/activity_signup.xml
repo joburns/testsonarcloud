@@ -4,17 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".SignupActivity"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarLogin"
+        android:id="@+id/toolbarSignup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:gravity="start"/>
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
@@ -22,44 +28,39 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:visibility="gone"
-        />
+            />
     </androidx.appcompat.widget.Toolbar>
 
     <EditText
-        android:id="@+id/etEmailLogin"
+        android:id="@+id/etEmailSignup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         android:ems="10"
-        android:inputType="textEmailAddress" />
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:padding="10dp"
+        android:layout_marginHorizontal="16dp"  />
 
     <EditText
-        android:id="@+id/etPasswordLogin"
+        android:id="@+id/etPasswordSignup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
         android:hint="Password"
         android:ems="10"
-        android:inputType="textPassword" />
-
-
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Login" />
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:layout_marginHorizontal="16dp"  />
 
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/btnSignUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Don`t have an account? Register here" />
-
-
-    <Button
-        android:id="@+id/btnUserForgotPass"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Forgot Password" />
-
+        android:text="Signup"
+        android:padding="10dp"
+        android:layout_marginHorizontal="16dp" />
 
 </LinearLayout>

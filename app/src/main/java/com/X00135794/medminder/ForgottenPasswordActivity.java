@@ -21,6 +21,7 @@ public class ForgottenPasswordActivity extends AppCompatActivity {
     ProgressBar progressBar;
     EditText userEmail;
     Button forgotPass;
+    Button back;
 
     FirebaseAuth firebaseAuth;
     @Override
@@ -32,7 +33,7 @@ public class ForgottenPasswordActivity extends AppCompatActivity {
         progressBar= findViewById(R.id.progressBar);
         userEmail = findViewById(R.id.etUserEmailForPassReset);
         forgotPass = findViewById(R.id.btnForgotPassword);
-
+        back = findViewById(R.id.btnBack);
         toolbar.setTitle("Forgot Password");
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -55,6 +56,14 @@ public class ForgottenPasswordActivity extends AppCompatActivity {
                     }
 
                 });
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(ForgottenPasswordActivity.this, MainActivity.class));
             }
         });
     }

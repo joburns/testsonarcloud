@@ -33,57 +33,48 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbarLogin);
         progressbar = findViewById(R.id.progressBar);
-        email = findViewById(R.id.etEmail);
-        password = findViewById(R.id.etPassword);
-        signup = findViewById(R.id.btnSignUp);
+        email = findViewById(R.id.etEmailLogin);
+        password = findViewById(R.id.etPasswordLogin);
+        signup = findViewById(R.id.btnRegister);
         login = findViewById(R.id.btnLogin);
         forgotPass = findViewById(R.id.btnUserForgotPass);
         toolbar.setTitle(R.string.app_name);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
+
+
         signup.setOnClickListener(new View.OnClickListener(){
-            public void onClick( View view){
-                progressbar.setVisibility(View.VISIBLE);
-                firebaseAuth.createUserWithEmailAndPassword(email.getText().toString(),
-                        password.getText().toString())
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressbar.setVisibility(View.GONE);
-                        if(task.isSuccessful()){
-                            firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
 
-                                    if(task.isSuccessful()){
-
-
-                                        Toast.makeText(MainActivity.this, "Registered successfully Please check your email for verification", Toast.LENGTH_LONG).show();
-                                        email.setText("");
-                                        password.setText("");
-                                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                                    }else{
-                                        Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                }
-                            });
-                        }
-                        else{
-                            Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }
-                });
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, SignupActivity.class));
             }
         });
 
         login.setOnClickListener(new View.OnClickListener(){
-
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                progressbar.setVisibility(View.VISIBLE);
+                firebaseAuth.signInWithEmailAndPassword(email.getText().toString(),
+                        password.getText().toString())
+                        .addOnCompleteListener((new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                progressbar.setVisibility(View.GONE);
+                                if(task.isSuccessful()){
+                                    if(firebaseAuth.getCurrentUser().isEmailVerified()){
+                                        startActivity(new Intent(MainActivity.this, UserAccountActivity.class));
+                                    }else{
+                                        Toast.makeText(MainActivity.this, "Please verify your email address", Toast.LENGTH_LONG).show();
+                                    }
+                                }else{
+                                    Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }));
             }
         });
 
