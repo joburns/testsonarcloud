@@ -18,9 +18,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+//import com.google.firebase.firestore.CollectionReference;
+//import com.google.firebase.firestore.DocumentReference;
+//import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignupActivity extends AppCompatActivity {
     Toolbar toolbar;
@@ -34,7 +34,7 @@ public class SignupActivity extends AppCompatActivity {
     Button signup;
     Button back;
     FirebaseAuth firebaseAuth;
-    FirebaseFirestore db;
+   // FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +54,7 @@ public class SignupActivity extends AppCompatActivity {
         toolbar.setTitle(R.string.app_name);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+   //     db = FirebaseFirestore.getInstance();
   //      private boolean hasValidationErrors(){
 //
 //            if(fName.isEmpty()){
@@ -122,7 +122,8 @@ public class SignupActivity extends AppCompatActivity {
                                     Toast.makeText(SignupActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             }
-                        }).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        });
+                /*.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         final String fName = firstName.getText().toString().trim();
@@ -154,7 +155,7 @@ public class SignupActivity extends AppCompatActivity {
                                 });
 
                         }
-                });
+                });*/
             }
         });
 
