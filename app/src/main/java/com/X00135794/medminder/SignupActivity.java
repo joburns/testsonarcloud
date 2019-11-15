@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,8 +20,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 //import com.google.firebase.firestore.CollectionReference;
-//import com.google.firebase.firestore.DocumentReference;
-//import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
     Toolbar toolbar;
@@ -34,7 +38,8 @@ public class SignupActivity extends AppCompatActivity {
     Button signup;
     Button back;
     FirebaseAuth firebaseAuth;
-   // FirebaseFirestore db;
+    FirebaseFirestore db;
+    private static final String TAG = "SignupActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,10 +56,10 @@ public class SignupActivity extends AppCompatActivity {
         county = findViewById(R.id.etCountySignup);
         signup = findViewById(R.id.btnSignUp);
         back = findViewById(R.id.btnBack);
-        toolbar.setTitle(R.string.app_name);
+        toolbar.setTitle("Sign up");
 
         firebaseAuth = FirebaseAuth.getInstance();
-   //     db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
   //      private boolean hasValidationErrors(){
 //
 //            if(fName.isEmpty()){
@@ -122,8 +127,8 @@ public class SignupActivity extends AppCompatActivity {
                                     Toast.makeText(SignupActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             }
-                        });
-                /*.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        })
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         final String fName = firstName.getText().toString().trim();
@@ -132,30 +137,53 @@ public class SignupActivity extends AppCompatActivity {
                         final String uPhone = phone.getText().toString().trim();
                         final String uCounty = county.getText().toString().trim();
 
-                        CollectionReference dbUsers = db.collection("users");
-                            User user = new User(
-                                    fName,
-                                    lName,
-                                    uEmail,
-                                    uPhone,
-                                    uCounty
-                            );
-                        dbUsers.add(user)
+                        Map<String, Object> user = new HashMap<>();
+                        user.put("firstName", fName);
+                        user.put("lastName", lName);
+                        user.put("email", uEmail);
+                        user.put("phone", uPhone);
+                        user.put("county", uCounty);
+
+                        // Add a new document with a generated ID
+                        db.collection("users")
+                                .add(user)
                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                     @Override
                                     public void onSuccess(DocumentReference documentReference) {
-                                        Toast.makeText(SignupActivity.this, "User Added", Toast.LENGTH_LONG).show();
+                                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(SignupActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                                        Log.w(TAG, "Error adding document", e);
                                     }
                                 });
 
+//                        CollectionReference dbUsers = db.collection("users");
+//                            User user = new User(
+//                                    fName,
+//                                    lName,
+//                                    uEmail,
+//                                    uPhone,
+//                                    uCounty
+//                            );
+//                        dbUsers.add(user)
+//                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                                    @Override
+//                                    public void onSuccess(DocumentReference documentReference) {
+//                                        Toast.makeText(SignupActivity.this, "User Added", Toast.LENGTH_LONG).show();
+//                                    }
+//                                })
+//                                .addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception e) {
+//                                        Toast.makeText(SignupActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+//                                    }
+//                                });
+
                         }
-                });*/
+                });
             }
         });
 
