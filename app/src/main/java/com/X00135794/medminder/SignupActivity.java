@@ -60,45 +60,11 @@ public class SignupActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-  //      private boolean hasValidationErrors(){
-//
-//            if(fName.isEmpty()){
-//                firstName.setError("First name required");
-//                firstName.requestFocus();
-//                return true;
-//            }
-//            if(lName.isEmpty()){
-//                lastName.setError("First name required");
-//                lastName.requestFocus();
-//                return true;
-//            }
-////                if(gen.isEmpty()){
-////                    genBtn.setError("Gender required");
-////                    genBtn.requestFocus();
-////                    return true;
-////                }
-//            if(uEmail.isEmpty()){
-//                email.setError("email required");
-//                email.requestFocus();
-//                return true;
-//            }
-//            if(phoneNo.isEmpty()){
-//                phone.setError("Phone required");
-//                phone.requestFocus();
-//                return true;
-//            }
-//            if(uCounty.isEmpty()){
-//                county.setError("County required");
-//                county.requestFocus();
-//                return true;
-//            }
-
-  //          return false;
- //       };
 
         signup.setOnClickListener(new View.OnClickListener(){
             public void onClick( View view){
                 progressbar.setVisibility(View.VISIBLE);
+                if(! hasValidationErrors(firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(),phone.getText().toString(), county.getText().toString())){
                 firebaseAuth.createUserWithEmailAndPassword(email.getText().toString(),
                         password.getText().toString())
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -106,13 +72,11 @@ public class SignupActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressbar.setVisibility(View.GONE);
                                 if(task.isSuccessful()){
+                                    createUserEntry();
                                     firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-
                                             if(task.isSuccessful()){
-
-
                                                 Toast.makeText(SignupActivity.this, "Registered successfully Please check your email for verification", Toast.LENGTH_LONG).show();
                                                 email.setText("");
                                                 password.setText("");
@@ -127,39 +91,9 @@ public class SignupActivity extends AppCompatActivity {
                                     Toast.makeText(SignupActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             }
-                        })
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        final String fName = firstName.getText().toString().trim();
-                        final String lName = lastName.getText().toString().trim();
-                        final  String uEmail = email.getText().toString().trim();
-                        final String uPhone = phone.getText().toString().trim();
-                        final String uCounty = county.getText().toString().trim();
+                        });
 
-                        Map<String, Object> user = new HashMap<>();
-                        user.put("firstName", fName);
-                        user.put("lastName", lName);
-                        user.put("email", uEmail);
-                        user.put("phone", uPhone);
-                        user.put("county", uCounty);
-
-                        // Add a new document with a generated ID
-                        db.collection("users")
-                                .add(user)
-                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-                                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w(TAG, "Error adding document", e);
-                                    }
-                                });
-
+            }
 //                        CollectionReference dbUsers = db.collection("users");
 //                            User user = new User(
 //                                    fName,
@@ -181,9 +115,6 @@ public class SignupActivity extends AppCompatActivity {
 //                                        Toast.makeText(SignupActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
 //                                    }
 //                                });
-
-                        }
-                });
             }
         });
 
@@ -197,4 +128,69 @@ public class SignupActivity extends AppCompatActivity {
 
 
     }
+    private void createUserEntry (){
+                final String fName = firstName.getText().toString().trim();
+                final String lName = lastName.getText().toString().trim();
+                final  String uEmail = email.getText().toString().trim();
+                final String uPhone = phone.getText().toString().trim();
+                final String uCounty = county.getText().toString().trim();
+
+                Map<String, Object> user = new HashMap<>();
+                user.put("firstName", fName);
+                user.put("lastName", lName);
+                user.put("email", uEmail);
+                user.put("phone", uPhone);
+                user.put("county", uCounty);
+
+                // Add a new document with a generated ID
+                db.collection("users").document(firebaseAuth.getCurrentUser().getUid())
+                        .set(user)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "DocumentSnapshot added");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error adding document", e);
+                            }
+                        });
+    }
+
+    private boolean hasValidationErrors(String fName, String lName, String uEmail, String phoneNo, String uCounty){
+        if(fName.isEmpty()){
+            firstName.setError("First name required");
+            firstName.requestFocus();
+            return true;
+        }
+        if(lName.isEmpty()){
+            lastName.setError("First name required");
+            lastName.requestFocus();
+            return true;
+        }
+//                if(gen.isEmpty()){
+//                    genBtn.setError("Gender required");
+//                    genBtn.requestFocus();
+//                    return true;
+//                }
+        if(uEmail.isEmpty()){
+            email.setError("email required");
+            email.requestFocus();
+            return true;
+        }
+        if(phoneNo.isEmpty()){
+            phone.setError("Phone required");
+            phone.requestFocus();
+            return true;
+        }
+        if(uCounty.isEmpty()){
+            county.setError("County required");
+            county.requestFocus();
+            return true;
+        }
+
+        return false;
+    };
 }
