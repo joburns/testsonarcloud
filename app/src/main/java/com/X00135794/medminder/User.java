@@ -1,11 +1,12 @@
 package com.X00135794.medminder;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class User {
     private String firstName, lastName, gender, email, phone, county;
     private Calendar dob;
-    private Medication[] medList;
+    private ArrayList<Medication> medList;
 
     public User() {
     }
@@ -18,7 +19,7 @@ public class User {
         this.phone = phone;
         this.county = county;
         //this.dob = dob;
-        this.medList = new Medication[]{};
+        this.medList = new ArrayList<>();
     }
 
     public String getFirstName() {
@@ -77,11 +78,18 @@ public class User {
         this.dob = dob;
     }
 
-    public Medication[] getMedList() {
+    public ArrayList<Medication> getMedList() {
         return medList;
     }
 
-    public void setMedList(Medication[] medList) {
+    public void setMedList(ArrayList<Medication> medList) {
         this.medList = medList;
+    }
+
+    public void addMed(Medication med){
+        medList.add(med);
+    }
+    public void removeMed(Medication med){
+        medList.remove(med);
     }
 }

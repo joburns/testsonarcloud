@@ -94,27 +94,6 @@ public class SignupActivity extends AppCompatActivity {
                         });
 
             }
-//                        CollectionReference dbUsers = db.collection("users");
-//                            User user = new User(
-//                                    fName,
-//                                    lName,
-//                                    uEmail,
-//                                    uPhone,
-//                                    uCounty
-//                            );
-//                        dbUsers.add(user)
-//                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                    @Override
-//                                    public void onSuccess(DocumentReference documentReference) {
-//                                        Toast.makeText(SignupActivity.this, "User Added", Toast.LENGTH_LONG).show();
-//                                    }
-//                                })
-//                                .addOnFailureListener(new OnFailureListener() {
-//                                    @Override
-//                                    public void onFailure(@NonNull Exception e) {
-//                                        Toast.makeText(SignupActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-//                                    }
-//                                });
             }
         });
 
@@ -135,12 +114,14 @@ public class SignupActivity extends AppCompatActivity {
                 final String uPhone = phone.getText().toString().trim();
                 final String uCounty = county.getText().toString().trim();
 
-                Map<String, Object> user = new HashMap<>();
+                /*Map<String, Object> user = new HashMap<>();
                 user.put("firstName", fName);
                 user.put("lastName", lName);
                 user.put("email", uEmail);
                 user.put("phone", uPhone);
-                user.put("county", uCounty);
+                user.put("county", uCounty);*/
+
+                User user = new User(fName,lName, uEmail,uPhone, uCounty);
 
                 // Add a new document with a generated ID
                 db.collection("users").document(firebaseAuth.getCurrentUser().getUid())

@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".UserAccountActivity">
+    android:fitsSystemWindows="true"
+    tools:context=".UserAccountActivity"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/tvUserDetails"
@@ -13,10 +15,49 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:textSize="40sp"/>
-
+    <TextView
+        android:id="@+id/tvMedicationList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp" />
     <Button
         android:id="@+id/btnLogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Logout" />
+
+    <TextView
+        android:id="@+id/tvMedForm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/etMedName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Medication Name" />
+
+        <EditText
+            android:id="@+id/etMedDosage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Medication Name" />
+
+        <EditText
+            android:id="@+id/etMedFrq"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="Medication Name" />
+    </TextView>
+
+
+
 </LinearLayout>
