@@ -47,7 +47,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-
+        /*asdasd*/
         toolbar = findViewById(R.id.toolbarSignup);
         progressbar = findViewById(R.id.progressBar);
         email = findViewById(R.id.etEmailSignup);
