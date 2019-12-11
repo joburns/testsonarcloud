@@ -1,5 +1,6 @@
 package com.X00135794.medminder;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -12,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -31,12 +34,12 @@ public class UserAccountActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private FirebaseFirestore  db;
     private TextView medicationList;
-    private TextView medicationForm;
     private EditText medName;
     private EditText medDose;
     private EditText medFrq;
     private DocumentReference docRef;
     private User user;
+    private Button addMedBtn;
 
     private static final String TAG = "UserAccountActivity";
 
@@ -48,11 +51,12 @@ public class UserAccountActivity extends AppCompatActivity {
         userDetails = findViewById(R.id.tvUserDetails);
         userLogout = findViewById(R.id.btnLogout);
         medicationList = findViewById(R.id.tvMedicationList);
-        medicationForm = findViewById(R.id.tvMedForm);
 
         medName = findViewById(R.id.etMedName);
         medDose = findViewById(R.id.etMedDosage);
         medFrq = findViewById(R.id.etMedFrq);
+
+        addMedBtn = findViewById(R.id.btnAddMed);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -68,6 +72,31 @@ public class UserAccountActivity extends AppCompatActivity {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+            }
+        });
+
+        addMedBtn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                String mName = medName.getText().toString();
+                double mDose = Double.parseDouble(medDose.getText().toString());
+                double mFrq = Double.parseDouble(medFrq.getText().toString());
+
+                Medication m = new Medication(mName,mDose,mFrq);
+                user.addMed(m);
+
+                docRef.update("medList", user.getMedList())
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "med added");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error adding document", e);
+                            }
+                        });
             }
         });
     }
@@ -88,25 +117,21 @@ public class UserAccountActivity extends AppCompatActivity {
 
                     String fName = user.getFirstName();
                     ArrayList<Medication> meds = user.getMedList();
-
-                    medicationList.setText(fName + "\n" + "Medication: " + meds);
+                    String content = fName + "\nMedication List\n";
+                    if(!meds.isEmpty()){
+                        for(Medication m : meds ){
+                            content += m.getMedName() + "\n";
+                        }
+                    }else{
+                        content += "your medication list is empty";
+                    }
+                    medicationList.setText(content );
 
                 }
             }
         });
 
 
-    }
-    public void addMed(View v) {
-        String mName = medName.getText().toString();
-        double mDose = Double.parseDouble(medDose.getText().toString());
-        double mFrq = Double.parseDouble(medFrq.getText().toString());
-
-        Medication m = new Medication(mName,mDose,mFrq);
-        user.addMed(m);
-
-
-        docRef.update("medList", user.getMedList());
     }
 
 }

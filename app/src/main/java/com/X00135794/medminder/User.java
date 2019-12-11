@@ -87,9 +87,39 @@ public class User {
     }
 
     public void addMed(Medication med){
-        medList.add(med);
+        int index = -1;
+        if(medList.isEmpty()){
+            medList.add(med);
+        }
+        else{
+            for (Medication m: medList)
+            {
+                if(med.getMedName().equals(m.getMedName())){
+                    index = medList.indexOf(m);
+                }
+            }
+            if(index != -1){
+                medList.set(index,med);
+            }else{
+                medList.add(med);
+            }
+        }
+
     }
     public void removeMed(Medication med){
-        medList.remove(med);
+        int index = -1;
+        if(medList.isEmpty()) {
+            return;
+        } else{
+            for (Medication m: medList)
+            {
+                if(med.getMedName().equals(m.getMedName())){
+                    index = medList.indexOf(m);
+                }
+            }
+            if(index != -1){
+                medList.remove(med);
+            }
+        }
     }
 }

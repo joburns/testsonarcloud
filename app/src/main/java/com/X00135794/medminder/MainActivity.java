@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -58,23 +59,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 progressbar.setVisibility(View.VISIBLE);
-                firebaseAuth.signInWithEmailAndPassword(email.getText().toString(),
-                        password.getText().toString())
-                        .addOnCompleteListener((new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                progressbar.setVisibility(View.GONE);
-                                if(task.isSuccessful()){
-                                    if(firebaseAuth.getCurrentUser().isEmailVerified()){
-                                        startActivity(new Intent(MainActivity.this, UserAccountActivity.class));
-                                    }else{
-                                        Toast.makeText(MainActivity.this, "Please verify your email address", Toast.LENGTH_LONG).show();
+                if(! hasValidationErrors(email.getText().toString(),password.getText().toString())) {
+                    firebaseAuth.signInWithEmailAndPassword(email.getText().toString(),
+                            password.getText().toString())
+                            .addOnCompleteListener((new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    progressbar.setVisibility(View.GONE);
+                                    if (task.isSuccessful()) {
+                                        if (firebaseAuth.getCurrentUser().isEmailVerified()) {
+                                            startActivity(new Intent(MainActivity.this, UserAccountActivity.class));
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "Please verify your email address", Toast.LENGTH_LONG).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                     }
-                                }else{
-                                    Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                 }
-                            }
-                        }));
+                            }));
+                }
             }
         });
 
@@ -85,5 +88,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private boolean hasValidationErrors(String uEmail, String uPassword) {
+        if (uEmail.isEmpty()) {
+            email.setError("Email is required");
+            email.requestFocus();
+            return true;
+        }
+        if(Patterns.EMAIL_ADDRESS.matcher(uEmail).matches()){
+            email.setError("Enter valid Email");
+            email.requestFocus();
+            return true;
+        }
+        if (uPassword.isEmpty()) {
+            password.setError("Password is required");
+            password.requestFocus();
+            return true;
+        }
+        return false;
     }
 }

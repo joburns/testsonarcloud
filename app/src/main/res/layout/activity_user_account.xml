@@ -26,12 +26,7 @@
         android:layout_height="wrap_content"
         android:text="Logout" />
 
-    <TextView
-        android:id="@+id/tvMedForm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:visibility="gone">
+
 
         <EditText
             android:id="@+id/etMedName"
@@ -47,7 +42,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:hint="Medication Name" />
+            android:hint="Medication Dosage" />
 
         <EditText
             android:id="@+id/etMedFrq"
@@ -55,9 +50,13 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:hint="Medication Name" />
-    </TextView>
+            android:hint="Medication Frq" />
 
+    <Button
+        android:id="@+id/btnAddMed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Med"/>
 
 
 </LinearLayout>
