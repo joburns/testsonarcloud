@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 progressbar.setVisibility(View.VISIBLE);
-                if(! hasValidationErrors(email.getText().toString(),password.getText().toString())) {
                     firebaseAuth.signInWithEmailAndPassword(email.getText().toString(),
                             password.getText().toString())
                             .addOnCompleteListener((new OnCompleteListener<AuthResult>() {
@@ -77,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                             }));
-                }
             }
         });
 
@@ -90,22 +88,5 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private boolean hasValidationErrors(String uEmail, String uPassword) {
-        if (uEmail.isEmpty()) {
-            email.setError("Email is required");
-            email.requestFocus();
-            return true;
-        }
-        if(Patterns.EMAIL_ADDRESS.matcher(uEmail).matches()){
-            email.setError("Enter valid Email");
-            email.requestFocus();
-            return true;
-        }
-        if (uPassword.isEmpty()) {
-            password.setError("Password is required");
-            password.requestFocus();
-            return true;
-        }
-        return false;
-    }
+
 }

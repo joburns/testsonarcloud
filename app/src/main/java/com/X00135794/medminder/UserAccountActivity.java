@@ -40,6 +40,7 @@ public class UserAccountActivity extends AppCompatActivity {
     private DocumentReference docRef;
     private User user;
     private Button addMedBtn;
+    private Button addMedPageBtn;
 
     private static final String TAG = "UserAccountActivity";
 
@@ -57,6 +58,7 @@ public class UserAccountActivity extends AppCompatActivity {
         medFrq = findViewById(R.id.etMedFrq);
 
         addMedBtn = findViewById(R.id.btnAddMed);
+        addMedPageBtn = findViewById(R.id.btnGoToAddPage);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -98,6 +100,14 @@ public class UserAccountActivity extends AppCompatActivity {
                             }
                         });
             }
+        });
+
+        addMedPageBtn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                startActivity(new Intent(UserAccountActivity.this, AddMedActivity.class));
+
+            }
+
         });
     }
    @Override

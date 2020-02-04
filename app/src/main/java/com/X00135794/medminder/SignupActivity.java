@@ -163,11 +163,7 @@ public class SignupActivity extends AppCompatActivity {
             email.requestFocus();
             return true;
         }
-        if(Patterns.EMAIL_ADDRESS.matcher(uEmail).matches()){
-            email.setError("Enter valid Email");
-            email.requestFocus();
-            return true;
-        }
+
         if(phoneNo.isEmpty()){
             phone.setError("Phone required");
             phone.requestFocus();

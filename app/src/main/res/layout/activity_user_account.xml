@@ -58,5 +58,11 @@
         android:layout_height="wrap_content"
         android:text="Add Med"/>
 
+    <Button
+        android:id="@+id/btnGoToAddPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add"/>
+
 
 </LinearLayout>
