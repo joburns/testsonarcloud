@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="#fff"
@@ -75,21 +75,20 @@
                         android:layout_height="wrap_content"/>
                     <EditText
                         android:id="@+id/resultEt"
-                        android:hint="Click + button to add image"
                         android:autoLink="all"
                         android:background="@null"
                         android:padding="5dp"
-                        android:textColor="#000"
+                        android:textColor="@color/colorAccent"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                     />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
-            <android.support.v7.widget.CardView
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="#fff"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="3dp"
                 app:cardElevation="3dp"
                 app:cardUseCompatPadding="true">
@@ -114,7 +113,7 @@
                         android:maxHeight="250dp" />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
     </ScrollView>
 

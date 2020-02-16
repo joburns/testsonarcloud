@@ -56,7 +56,7 @@ public class AddMedActivity extends AppCompatActivity {
     String cameraPermission[];
     String storagePermission[];
 
-    Uri imag_uri;
+    Uri img_uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +87,7 @@ public class AddMedActivity extends AppCompatActivity {
             showImageImportDialog();
         }
         if(id == R.id.settings){
-            Toast.makeText(this,"Setting", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddMedActivity.this,"Setting", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -106,7 +106,8 @@ public class AddMedActivity extends AppCompatActivity {
                     //getting permissions
                     if(!checkCameraPermission()){
                         requestCameraPermission();
-                    }else{
+                    }
+                    else{
                         pickCamera();
                     }
                 }
@@ -130,12 +131,12 @@ public class AddMedActivity extends AppCompatActivity {
     }
 
     private void requestStoragePermission() {
-        ActivityCompat.requestPermissions(this, storagePermission, STORAGE_REQUEST_CODE);
+        ActivityCompat.requestPermissions(AddMedActivity.this, storagePermission, STORAGE_REQUEST_CODE);
     }
 
 
     private boolean checkStoragePermission() {
-        boolean StorageResult = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)==(PackageManager.PERMISSION_GRANTED);
+        boolean StorageResult = ContextCompat.checkSelfPermission(AddMedActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
         return StorageResult;
 
     }
@@ -144,10 +145,10 @@ public class AddMedActivity extends AppCompatActivity {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "NewPic");
         values.put(MediaStore.Images.Media.DESCRIPTION, "Image To text");
-        imag_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        img_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imag_uri);
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, img_uri);
 
         startActivityForResult(cameraIntent, IMG_PICK_CAMERA_CODE);
     }
@@ -157,14 +158,14 @@ public class AddMedActivity extends AppCompatActivity {
     }
 
     private boolean checkCameraPermission() {
-        boolean CamResult = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)==(PackageManager.PERMISSION_GRANTED);
+        boolean CamResult = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
         //for better quality image saving to storage first;
-        boolean StorageResult = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)==(PackageManager.PERMISSION_GRANTED);
+        boolean StorageResult = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
         return CamResult && StorageResult;
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         switch (requestCode){
             case CAMERA_REQUEST_CODE:
@@ -175,7 +176,8 @@ public class AddMedActivity extends AppCompatActivity {
                         pickCamera();
                     }
                     else{
-                        Toast.makeText(this,"permission denied", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddMedActivity.this,"permission denied", Toast.LENGTH_SHORT).show();
+
                     }
                 }
                 break;
@@ -186,7 +188,7 @@ public class AddMedActivity extends AppCompatActivity {
                         pickGallery();
                     }
                     else{
-                        Toast.makeText(this,"permission denied", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddMedActivity.this,"permission denied", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
@@ -195,14 +197,16 @@ public class AddMedActivity extends AppCompatActivity {
 
     //handling image result
     @Override
-    protected void onActivityResult(int requestCode, int resultCode,@Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == IMG_PICK_GALLERY_CODE) {
-                CropImage.activity(data.getData()).setGuidelines(CropImageView.Guidelines.ON).start(this);
+                CropImage.activity(data.getData())
+                        .setGuidelines(CropImageView.Guidelines.ON).start(this);
             }
             if (requestCode == IMG_PICK_CAMERA_CODE) {
-                CropImage.activity(imag_uri).setGuidelines(CropImageView.Guidelines.ON).start(this);
+                CropImage.activity(img_uri)
+                        .setGuidelines(CropImageView.Guidelines.ON).start(this);
 
             }
         }
@@ -212,32 +216,38 @@ public class AddMedActivity extends AppCompatActivity {
             if (requestCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
                 imgPrev.setImageURI(resultUri);
+                Toast.makeText(AddMedActivity.this, "after image preview", Toast.LENGTH_SHORT).show();
 
                 // getting a drawable bitmap for text recognition
-                BitmapDrawable bitmapDrawable = (BitmapDrawable) imgPrev.getDrawable();
+                BitmapDrawable bitmapDrawable = (BitmapDrawable)imgPrev.getDrawable();
                 Bitmap myBitmap = bitmapDrawable.getBitmap();
 
                 TextRecognizer recognizer = new TextRecognizer.Builder(getApplicationContext()).build();
 
                 if (!recognizer.isOperational()) {
-                    Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
-                } else {
+                    Toast.makeText(AddMedActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                }
+                else {
                     Frame frame = new Frame.Builder().setBitmap(myBitmap).build();
                     SparseArray<TextBlock> items = recognizer.detect(frame);
                     StringBuilder sb = new StringBuilder();
 
-                    for (int i = 0; i < items.size(); i++) {
+                    for (int i=0; i<items.size(); i++) {
                         TextBlock myItem = items.valueAt(i);
                         sb.append(myItem.getValue());
                         sb.append("\n");
                     }
 
                     imageText.setText(sb.toString());
+                    imageText.setText("gg");
+                    Toast.makeText(AddMedActivity.this, "after set text", Toast.LENGTH_SHORT).show();
+
                 }
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                // incase of any errors
+            }
+            else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+
                 Exception err = result.getError();
-                Toast.makeText(this, "" + err, Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddMedActivity.this, "" + err, Toast.LENGTH_SHORT).show();
             }
         }
     }
