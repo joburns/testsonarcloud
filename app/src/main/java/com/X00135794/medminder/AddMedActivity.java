@@ -87,7 +87,7 @@ public class AddMedActivity extends AppCompatActivity {
             showImageImportDialog();
         }
         if(id == R.id.settings){
-            Toast.makeText(AddMedActivity.this,"Setting", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Setting", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -176,7 +176,7 @@ public class AddMedActivity extends AppCompatActivity {
                         pickCamera();
                     }
                     else{
-                        Toast.makeText(AddMedActivity.this,"permission denied", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this,"permission denied", Toast.LENGTH_SHORT).show();
 
                     }
                 }
@@ -188,7 +188,7 @@ public class AddMedActivity extends AppCompatActivity {
                         pickGallery();
                     }
                     else{
-                        Toast.makeText(AddMedActivity.this,"permission denied", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this,"permission denied", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
@@ -196,9 +196,11 @@ public class AddMedActivity extends AppCompatActivity {
     }
 
     //handling image result
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == RESULT_OK) {
             if (requestCode == IMG_PICK_GALLERY_CODE) {
                 CropImage.activity(data.getData())
@@ -213,10 +215,9 @@ public class AddMedActivity extends AppCompatActivity {
         //getting image
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (requestCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 Uri resultUri = result.getUri();
                 imgPrev.setImageURI(resultUri);
-                Toast.makeText(AddMedActivity.this, "after image preview", Toast.LENGTH_SHORT).show();
 
                 // getting a drawable bitmap for text recognition
                 BitmapDrawable bitmapDrawable = (BitmapDrawable)imgPrev.getDrawable();
@@ -225,7 +226,7 @@ public class AddMedActivity extends AppCompatActivity {
                 TextRecognizer recognizer = new TextRecognizer.Builder(getApplicationContext()).build();
 
                 if (!recognizer.isOperational()) {
-                    Toast.makeText(AddMedActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Frame frame = new Frame.Builder().setBitmap(myBitmap).build();
@@ -239,15 +240,13 @@ public class AddMedActivity extends AppCompatActivity {
                     }
 
                     imageText.setText(sb.toString());
-                    imageText.setText("gg");
-                    Toast.makeText(AddMedActivity.this, "after set text", Toast.LENGTH_SHORT).show();
 
                 }
             }
             else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 
                 Exception err = result.getError();
-                Toast.makeText(AddMedActivity.this, "" + err, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "" + err, Toast.LENGTH_SHORT).show();
             }
         }
     }
