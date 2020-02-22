@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -47,6 +48,7 @@ public class AddMedActivity extends AppCompatActivity {
 
     EditText imageText;
     ImageView imgPrev;
+    EditText medCheckText;
 
     private static final int CAMERA_REQUEST_CODE = 200;
     private static final int STORAGE_REQUEST_CODE = 400;
@@ -58,6 +60,8 @@ public class AddMedActivity extends AppCompatActivity {
 
     Uri img_uri;
 
+    String[] medListCheck = new String[]{"Paracetamol", "Neomercazole", "Insulin", "Antihistamine", "Telfast", "Valtrex","Omeprazole" };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +71,7 @@ public class AddMedActivity extends AppCompatActivity {
         actionBar.setSubtitle("Click + button to insert Image");
         imageText = findViewById(R.id.resultEt);
         imgPrev = findViewById(R.id.imageIv);
+        medCheckText = findViewById(R.id.checkMed);
 
         cameraPermission = new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -237,10 +242,17 @@ public class AddMedActivity extends AppCompatActivity {
                         TextBlock myItem = items.valueAt(i);
                         sb.append(myItem.getValue());
                         sb.append("\n");
+                        String value = myItem.getValue();
+                        for(int j=0;j<medListCheck.length;j++){
+                            if(value.toUpperCase().contains(medListCheck[j].toUpperCase())){
+                                medCheckText.setText(medListCheck[j]);
+                                medCheckText.setTextColor(Color.parseColor("#1ac6ff"));
+                            }
+                        }
+
                     }
 
                     imageText.setText(sb.toString());
-
                 }
             }
             else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
