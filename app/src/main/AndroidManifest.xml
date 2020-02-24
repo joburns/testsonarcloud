@@ -32,7 +32,8 @@
         <activity
             android:name=".UserAccountActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".SplashScreen"
+            android:theme="@style/SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -40,6 +41,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
+
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" android:theme="@style/AppTheme"/>
     </application>
 
