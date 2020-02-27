@@ -50,29 +50,50 @@ public class AddMedActivity extends AppCompatActivity {
     ImageView imgPrev;
     EditText medCheckText;
 
+    EditText medName;
+    EditText dosageAmount;
+    EditText dosageType;
+    EditText medDesc;
+
+
     private static final int CAMERA_REQUEST_CODE = 200;
     private static final int STORAGE_REQUEST_CODE = 400;
     private static final int IMG_PICK_GALLERY_CODE = 1000;
     private static final int IMG_PICK_CAMERA_CODE = 1001;
 
-    String cameraPermission[];
-    String storagePermission[];
+    String[] cameraPermission;
+    String[] storagePermission;
 
     Uri img_uri;
 
     String[] medListCheck = new String[]{"Paracetamol", "Neomercazole", "Insulin", "Antihistamine", "Telfast", "Valtrex","Omeprazole" };
 
+    /*{
+        new Medication();
+        new Medication();
+        new Medication();
+        new Medication();
+        new Medication();
+        new Medication();
+        new Medication();
+
+    }*/
+    String[] excludeList = new String[]{"the", "and", "of", "in", "if", "for", "taken", "one", "twice", "two", "three", "four", "times", "daily", "mg", "ml", "keep", "out", "reach", "from", "children"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_med);
 
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setSubtitle("Click + button to insert Image");
+        actionBar.setSubtitle("Click Image button to insert Image");
         imageText = findViewById(R.id.resultEt);
         imgPrev = findViewById(R.id.imageIv);
         medCheckText = findViewById(R.id.checkMed);
 
+        medName = findViewById(R.id.medName);
+        dosageType = findViewById(R.id.dosageType);
+        dosageAmount = findViewById(R.id.dosageAmount);
+        medDesc = findViewById(R.id.medDesc);
         cameraPermission = new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -243,12 +264,15 @@ public class AddMedActivity extends AppCompatActivity {
                         sb.append(myItem.getValue());
                         sb.append("\n");
                         String value = myItem.getValue();
-                        for(int j=0;j<medListCheck.length;j++){
-                            if(value.toUpperCase().contains(medListCheck[j].toUpperCase())){
-                                medCheckText.setText(medListCheck[j]);
-                                medCheckText.setTextColor(Color.parseColor("#1ac6ff"));
+                        if(!excludeList.toString().toUpperCase().contains(value.toUpperCase())){
+                            for(int j=0;j<medListCheck.length;j++){
+                                if(value.toUpperCase().contains(medListCheck[j].toUpperCase())){
+                                    medCheckText.setText(medListCheck[j]);
+                                    medCheckText.setTextColor(Color.parseColor("#1ac6ff"));
+                                }
                             }
                         }
+
 
                     }
 

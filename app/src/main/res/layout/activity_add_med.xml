@@ -91,6 +91,46 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         />
+                    <EditText
+                        android:id="@+id/medName"
+                        android:autoLink="all"
+                        android:background="@null"
+                        android:padding="5dp"
+                        android:hint="Medication"
+                        android:textColor="@color/colorAccent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                    <EditText
+                        android:id="@+id/dosageType"
+                        android:autoLink="all"
+                        android:background="@null"
+                        android:padding="5dp"
+                        android:hint="Dosage Type"
+                        android:textColor="@color/colorAccent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                    />
+                    <EditText
+                        android:id="@+id/dosageAmount"
+                        android:autoLink="all"
+                        android:background="@null"
+                        android:padding="5dp"
+                        android:hint="Dosage Amount"
+                        android:textColor="@color/colorAccent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                    />
+                    <EditText
+                        android:id="@+id/medDesc"
+                        android:autoLink="all"
+                        android:background="@null"
+                        android:padding="5dp"
+                        android:hint="Description"
+                        android:textColor="@color/colorAccent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                   />
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
