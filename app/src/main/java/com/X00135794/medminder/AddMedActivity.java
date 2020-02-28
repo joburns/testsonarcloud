@@ -40,6 +40,8 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -56,12 +58,14 @@ public class AddMedActivity extends AppCompatActivity {
     ImageView imgPrev;
     EditText medCheckText;
 
-    EditText medName;
-    EditText dosageAmount;
-    EditText dosageType;
-    EditText medDesc;
-    EditText medFrq;
-    EditText medFrqRate;
+    private TextInputEditText medName;
+
+    //EditText medName;
+    private TextInputEditText dosageAmount;
+    private TextInputEditText dosageType;
+    private EditText medDesc;
+    private TextInputEditText medFrq;
+    private TextInputEditText medFrqRate;
 
 
     private static final int CAMERA_REQUEST_CODE = 200;
