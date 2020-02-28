@@ -37,12 +37,18 @@ import android.widget.Toast;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static java.lang.System.in;
 
 public class AddMedActivity extends AppCompatActivity {
 
@@ -54,6 +60,8 @@ public class AddMedActivity extends AppCompatActivity {
     EditText dosageAmount;
     EditText dosageType;
     EditText medDesc;
+    EditText medFrq;
+    EditText medFrqRate;
 
 
     private static final int CAMERA_REQUEST_CODE = 200;
@@ -68,16 +76,17 @@ public class AddMedActivity extends AppCompatActivity {
 
     String[] medListCheck = new String[]{"Paracetamol", "Neomercazole", "Insulin", "Antihistamine", "Telfast", "Valtrex","Omeprazole" };
 
-    /*{
-        new Medication();
-        new Medication();
-        new Medication();
-        new Medication();
-        new Medication();
-        new Medication();
-        new Medication();
+    List<Medication> medListCheck2 = new ArrayList<Medication>(Arrays.asList(
+            new Medication("Omeprazole", "pill", 1, "Daily", 1),
+        new Medication("Valtrex", "pill", 1, "Daily", 1),
+        new Medication("Telfast", "pill", 2, "Daily", 1),
+        new Medication("Antihistamine", "pill", 1, "Daily", 4),
+        new Medication("Insulin", "Liquid", 10, "Daily", 1),
+        new Medication("Neomercazole", "pill", 3, "Daily", 1),
+        new Medication("Paracetamol", "pill", 2, "Daily", 4)
+    ));
 
-    }*/
+
     String[] excludeList = new String[]{"the", "and", "of", "in", "if", "for", "taken", "one", "twice", "two", "three", "four", "times", "daily", "mg", "ml", "keep", "out", "reach", "from", "children"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +103,9 @@ public class AddMedActivity extends AppCompatActivity {
         dosageType = findViewById(R.id.dosageType);
         dosageAmount = findViewById(R.id.dosageAmount);
         medDesc = findViewById(R.id.medDesc);
+        medFrq = findViewById(R.id.medFreq);
+        medFrqRate = findViewById(R.id.medFreqRate);
+
         cameraPermission = new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -246,26 +258,98 @@ public class AddMedActivity extends AppCompatActivity {
                 imgPrev.setImageURI(resultUri);
 
                 // getting a drawable bitmap for text recognition
-                BitmapDrawable bitmapDrawable = (BitmapDrawable)imgPrev.getDrawable();
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) imgPrev.getDrawable();
                 Bitmap myBitmap = bitmapDrawable.getBitmap();
 
                 TextRecognizer recognizer = new TextRecognizer.Builder(getApplicationContext()).build();
 
                 if (!recognizer.isOperational()) {
                     Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     Frame frame = new Frame.Builder().setBitmap(myBitmap).build();
                     SparseArray<TextBlock> items = recognizer.detect(frame);
                     StringBuilder sb = new StringBuilder();
 
-                    for (int i=0; i<items.size(); i++) {
+                    for (int i = 0; i < items.size(); i++) {
                         TextBlock myItem = items.valueAt(i);
                         sb.append(myItem.getValue());
                         sb.append("\n");
+
+                        for(Text textLine : myItem.getComponents()) {
+                            for (Text currentWord : textLine.getComponents()) {
+                                for(int c = 0; c < excludeList.length; c++) {
+                                    if (!excludeList[c].toUpperCase().contains(currentWord.getValue().toUpperCase())) {
+                                        for (Medication med : medListCheck2) {
+                                            if (currentWord.getValue().toUpperCase().equals(med.getMedName().toUpperCase())) {
+
+                                                medName.setText(med.getMedName());
+                                                dosageType.setText(med.getDosageType());
+                                                dosageAmount.setText(med.getDosageString());
+                                                medFrqRate.setText(med.getFreqRate());
+                                                medFrq.setText(med.getFrequencyString());
+
+                                                medName.setTextColor(Color.parseColor("#1ac6ff"));
+                                                dosageType.setTextColor(Color.parseColor("#1ac6ff"));
+                                                dosageAmount.setTextColor(Color.parseColor("#1ac6ff"));
+                                                medFrq.setTextColor(Color.parseColor("#1ac6ff"));
+                                                medFrqRate.setTextColor(Color.parseColor("#1ac6ff"));
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                        /*
                         String value = myItem.getValue();
-                        if(!excludeList.toString().toUpperCase().contains(value.toUpperCase())){
-                            for(int j=0;j<medListCheck.length;j++){
+                        for(int c = 0; c < excludeList.length; c++) {
+
+                            medDesc.setText(value);
+                            //if (!value.toUpperCase().contains(excludeList[c].toUpperCase())) {
+                            if(excludeList[c].toUpperCase().contains(value.toUpperCase())){
+                                medDesc.setText(value);
+                                medCheckText.setText("here");
+                                for (Medication med : medListCheck2) {
+
+                                    medCheckText.setText("here in med loop");
+                                    if (value.toUpperCase().equals(med.getMedName().toUpperCase())) {
+
+                                        medCheckText.setText("here in if statement");
+                                        medName.setText(med.getMedName());
+                                        dosageType.setText(med.getDosageType());
+                                        dosageAmount.setText(med.getDosageString());
+                                        medFrqRate.setText(med.getFreqRate());
+                                        medFrq.setText(med.getFrequencyString());
+
+                                        medName.setTextColor(Color.parseColor("#1ac6ff"));
+                                        dosageType.setTextColor(Color.parseColor("#1ac6ff"));
+                                        dosageAmount.setTextColor(Color.parseColor("#1ac6ff"));
+                                        medFrq.setTextColor(Color.parseColor("#1ac6ff"));
+                                        medFrqRate.setTextColor(Color.parseColor("#1ac6ff"));
+                                    }
+                                }
+                            }
+                      /*
+                            if(!excludeList.toString().toUpperCase().contains(value.toUpperCase())){
+                            medDesc.setText(value);
+                            for( Medication med : medListCheck2){
+                                if(value.toUpperCase().equals(med.getMedName().toUpperCase())){
+                                    medName.setText(med.getMedName());
+                                    dosageType.setText(med.getDosageType());
+                                    dosageAmount.setText(med.getDosageString());
+                                    medFrqRate.setText(med.getFreqRate());
+                                    medFrq.setText(med.getFrequencyString());
+
+                                    medName.setTextColor(Color.parseColor("#1ac6ff"));
+                                    dosageType.setTextColor(Color.parseColor("#1ac6ff"));
+                                    dosageAmount.setTextColor(Color.parseColor("#1ac6ff"));
+                                    medFrq.setTextColor(Color.parseColor("#1ac6ff"));
+                                    medFrqRate.setTextColor(Color.parseColor("#1ac6ff"));
+                                }
+                            }
+
+
+                            for(int j=0;j<medListCheck2.size();j++){
                                 if(value.toUpperCase().contains(medListCheck[j].toUpperCase())){
                                     medCheckText.setText(medListCheck[j]);
                                     medCheckText.setTextColor(Color.parseColor("#1ac6ff"));
@@ -274,9 +358,10 @@ public class AddMedActivity extends AppCompatActivity {
                         }
 
 
-                    }
+                        }*/
 
-                    imageText.setText(sb.toString());
+                        imageText.setText(sb.toString());
+                    }
                 }
             }
             else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {

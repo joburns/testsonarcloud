@@ -122,6 +122,26 @@
                         android:layout_height="wrap_content"
                     />
                     <EditText
+                        android:id="@+id/medFreq"
+                        android:autoLink="all"
+                        android:background="@null"
+                        android:padding="5dp"
+                        android:hint="Dosage Amount"
+                        android:textColor="@color/colorAccent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                    <EditText
+                        android:id="@+id/medFreqRate"
+                        android:autoLink="all"
+                        android:background="@null"
+                        android:padding="5dp"
+                        android:hint="Dosage Amount"
+                        android:textColor="@color/colorAccent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                    <EditText
                         android:id="@+id/medDesc"
                         android:autoLink="all"
                         android:background="@null"
