@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -24,40 +23,47 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.CameraSource;
-import com.google.android.gms.vision.Detector;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.lang.System.in;
 
 public class AddMedActivity extends AppCompatActivity {
 
+
+    private DocumentReference docRef;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
+    private FirebaseFirestore  db;
+    private User user;
     EditText imageText;
     ImageView imgPrev;
     EditText medCheckText;
-
+    Button addBtn;
     private TextInputEditText medName;
 
     //EditText medName;
@@ -72,6 +78,9 @@ public class AddMedActivity extends AppCompatActivity {
     private static final int STORAGE_REQUEST_CODE = 400;
     private static final int IMG_PICK_GALLERY_CODE = 1000;
     private static final int IMG_PICK_CAMERA_CODE = 1001;
+
+
+    private static final String TAG = "AddMedActivity";
 
     String[] cameraPermission;
     String[] storagePermission;
@@ -99,6 +108,12 @@ public class AddMedActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setSubtitle("Click Image button to insert Image");
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+        docRef = db.document("users/"+ firebaseUser.getUid());
+
         imageText = findViewById(R.id.resultEt);
         imgPrev = findViewById(R.id.imageIv);
         medCheckText = findViewById(R.id.checkMed);
@@ -110,8 +125,41 @@ public class AddMedActivity extends AppCompatActivity {
         medFrq = findViewById(R.id.medFreq);
         medFrqRate = findViewById(R.id.medFreqRate);
 
+        addBtn = findViewById(R.id.btnAddMedPage);
         cameraPermission = new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+
+        addBtn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                String mName = medName.getText().toString();
+                double mDose = Double.parseDouble(dosageAmount.getText().toString());
+                String mDoseType = dosageType.getText().toString();
+                String medDes = medDesc.getText().toString();
+                double mFrq = Double.parseDouble(medFrq.getText().toString());
+                String mFrqRate = medFrqRate.getText().toString();
+
+                Medication m = new Medication(mName,mDoseType,mDose,mFrqRate,mFrq);
+                user.addMed(m);
+
+                docRef.update("medList", user.getMedList())
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "med added");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error adding document", e);
+                            }
+                        });
+
+
+                startActivity(new Intent(AddMedActivity.this, UserAccountActivity.class));
+            }
+        });
 
     }
 
@@ -304,65 +352,6 @@ public class AddMedActivity extends AppCompatActivity {
                                 }
                             }
                         }
-                        /*
-                        String value = myItem.getValue();
-                        for(int c = 0; c < excludeList.length; c++) {
-
-                            medDesc.setText(value);
-                            //if (!value.toUpperCase().contains(excludeList[c].toUpperCase())) {
-                            if(excludeList[c].toUpperCase().contains(value.toUpperCase())){
-                                medDesc.setText(value);
-                                medCheckText.setText("here");
-                                for (Medication med : medListCheck2) {
-
-                                    medCheckText.setText("here in med loop");
-                                    if (value.toUpperCase().equals(med.getMedName().toUpperCase())) {
-
-                                        medCheckText.setText("here in if statement");
-                                        medName.setText(med.getMedName());
-                                        dosageType.setText(med.getDosageType());
-                                        dosageAmount.setText(med.getDosageString());
-                                        medFrqRate.setText(med.getFreqRate());
-                                        medFrq.setText(med.getFrequencyString());
-
-                                        medName.setTextColor(Color.parseColor("#1ac6ff"));
-                                        dosageType.setTextColor(Color.parseColor("#1ac6ff"));
-                                        dosageAmount.setTextColor(Color.parseColor("#1ac6ff"));
-                                        medFrq.setTextColor(Color.parseColor("#1ac6ff"));
-                                        medFrqRate.setTextColor(Color.parseColor("#1ac6ff"));
-                                    }
-                                }
-                            }
-                      /*
-                            if(!excludeList.toString().toUpperCase().contains(value.toUpperCase())){
-                            medDesc.setText(value);
-                            for( Medication med : medListCheck2){
-                                if(value.toUpperCase().equals(med.getMedName().toUpperCase())){
-                                    medName.setText(med.getMedName());
-                                    dosageType.setText(med.getDosageType());
-                                    dosageAmount.setText(med.getDosageString());
-                                    medFrqRate.setText(med.getFreqRate());
-                                    medFrq.setText(med.getFrequencyString());
-
-                                    medName.setTextColor(Color.parseColor("#1ac6ff"));
-                                    dosageType.setTextColor(Color.parseColor("#1ac6ff"));
-                                    dosageAmount.setTextColor(Color.parseColor("#1ac6ff"));
-                                    medFrq.setTextColor(Color.parseColor("#1ac6ff"));
-                                    medFrqRate.setTextColor(Color.parseColor("#1ac6ff"));
-                                }
-                            }
-
-
-                            for(int j=0;j<medListCheck2.size();j++){
-                                if(value.toUpperCase().contains(medListCheck[j].toUpperCase())){
-                                    medCheckText.setText(medListCheck[j]);
-                                    medCheckText.setTextColor(Color.parseColor("#1ac6ff"));
-                                }
-                            }
-                        }
-
-
-                        }*/
 
                         imageText.setText(sb.toString());
                     }
@@ -375,121 +364,24 @@ public class AddMedActivity extends AppCompatActivity {
             }
         }
     }
-    /*
-    Toolbar toolbar;
-    ProgressBar progressBar;
-    Button back;
-    SurfaceView camera;
-    TextView textView;
-    CameraSource cameraSource;
-    final int RequestCameraPermissionID = 1001;
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch(requestCode){
-            case RequestCameraPermissionID:
-            {
-                if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-
-                    if(ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                        return;
-                    }
-                    try {
-                        cameraSource.start(camera.getHolder());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_med);
-
-        toolbar = findViewById(R.id.toolbarAddMed);
-        progressBar= findViewById(R.id.progressBar);
-        back = findViewById(R.id.btnBack);
-
-        camera = findViewById(R.id.surfaceView);
-        textView = findViewById(R.id.textView1);
-        toolbar.setTitle("Add Med");
-
-        back.setOnClickListener(new View.OnClickListener(){
-
+    protected void onStart(){
+        super.onStart();
+        docRef.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
             @Override
-            public void onClick(View view) {
-                startActivity(new Intent(AddMedActivity.this, UserAccountActivity.class));
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                if (e != null) {
+                    Toast.makeText(AddMedActivity.this, "Error while loading!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, e.toString());
+                    return;
+                }
+
+                if (documentSnapshot.exists()) {
+                    user = documentSnapshot.toObject(User.class);
+
+                }
             }
         });
-        TextRecognizer textRecognizer = new TextRecognizer.Builder(getApplicationContext()).build();
-        if(!textRecognizer.isOperational()){
-            Log.w("AddMed","Detector dependencies are not yet available");
-        }
-        else{
-            cameraSource = new CameraSource.Builder(getApplicationContext(),textRecognizer)
-                    .setFacing(cameraSource.CAMERA_FACING_BACK)
-                    .setRequestedPreviewSize(640,480)
-                    . setRequestedFps(2)
-                    .setAutoFocusEnabled(true)
-                    .build();
-
-            camera.getHolder().addCallback(new SurfaceHolder.Callback() {
-                @Override
-                public void surfaceCreated(SurfaceHolder holder) {
-                    try{
-                        if(ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED){
-                            ActivityCompat.requestPermissions(AddMedActivity.this,
-                                    new String[]{Manifest.permission.CAMERA},
-                                RequestCameraPermissionID);
-                            return;
-                        }
-                        cameraSource.start(camera.getHolder());
-                    }catch(IOException e){
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-                }
-
-                @Override
-                public void surfaceDestroyed(SurfaceHolder holder) {
-                    cameraSource.stop();
-                }
-            });
-
-            textRecognizer.setProcessor(new Detector.Processor<TextBlock>() {
-                @Override
-                public void release() {
-
-                }
-
-                @Override
-                public void receiveDetections(Detector.Detections<TextBlock> detections) {
-                    final SparseArray<TextBlock> items = detections.getDetectedItems();
-                    if(items.size() != 0){
-                        textView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                StringBuilder stringBuilder = new StringBuilder();
-                                for(int i=0; i<items.size(); i++){
-                                    TextBlock item = items.valueAt(i);
-                                    stringBuilder.append(item.getValue());
-                                    stringBuilder.append("\n");
-                                }
-
-                                textView.setText(stringBuilder.toString());
-                            }
-                        });
-                    }
-                }
-            });
-        }
     }
-     */
 }

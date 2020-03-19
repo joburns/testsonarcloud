@@ -41,6 +41,7 @@ public class SignupActivity extends AppCompatActivity {
     Button back;
     FirebaseAuth firebaseAuth;
     FirebaseFirestore db;
+    protected User currUser;
     private static final String TAG = "SignupActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,11 +124,11 @@ public class SignupActivity extends AppCompatActivity {
                 user.put("phone", uPhone);
                 user.put("county", uCounty);*/
 
-                User user = new User(fName,lName, uEmail,uPhone, uCounty);
+                currUser = new User(fName,lName, uEmail,uPhone, uCounty);
 
                 // Add a new document with a generated ID
                 db.collection("users").document(firebaseAuth.getCurrentUser().getUid())
-                        .set(user)
+                        .set(currUser)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {

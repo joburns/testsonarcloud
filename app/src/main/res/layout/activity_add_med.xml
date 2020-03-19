@@ -8,45 +8,6 @@
     android:gravity="center_horizontal"
     tools:context=".AddMedActivity">
 
-    <!--
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarAddMed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark">
-        <Button
-            android:id="@+id/btnBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Back"
-            android:gravity="start"/>
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:visibility="gone"
-            />
-    </androidx.appcompat.widget.Toolbar>
-
-    <SurfaceView
-        android:id="@+id/surfaceView"
-        android:layout_width="match_parent"
-        android:layout_height="469dp" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="match_parent"
-        android:layout_height="185dp"
-        android:layout_alignParentBottom="true"
-        android:text="No Text"
-        android:textColor="@android:color/black"
-        android:textSize="20sp" />
--->
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -164,58 +125,6 @@
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!--<EditText
-                        android:id="@+id/medName"
-                        android:autoLink="all"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:hint="Medication"
-                        android:textColor="@color/colorAccent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        />
-                    <EditText
-                        android:id="@+id/dosageType"
-                        android:autoLink="all"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:hint="Dosage Type"
-                        android:textColor="@color/colorAccent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                    />
-                    <EditText
-                        android:id="@+id/dosageAmount"
-                        android:autoLink="all"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:hint="Dosage Amount"
-                        android:textColor="@color/colorAccent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                    />
-                    <EditText
-                        android:id="@+id/medFreq"
-                        android:autoLink="all"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:hint="Dosage Amount"
-                        android:textColor="@color/colorAccent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        />
-                    <EditText
-                        android:id="@+id/medFreqRate"
-                        android:autoLink="all"
-                        android:background="@null"
-                        android:padding="5dp"
-                        android:hint="Dosage Amount"
-                        android:textColor="@color/colorAccent"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        />
-
-                        -->
                     <EditText
                         android:id="@+id/medDesc"
                         android:autoLink="all"
@@ -226,9 +135,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                    />
+
+                    <Button
+                        android:id="@+id/btnAddMedPage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Add Med" />
+
+
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
