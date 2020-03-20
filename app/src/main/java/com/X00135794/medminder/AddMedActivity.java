@@ -90,7 +90,7 @@ public class AddMedActivity extends AppCompatActivity {
     String[] medListCheck = new String[]{"Paracetamol", "Neomercazole", "Insulin", "Antihistamine", "Telfast", "Valtrex","Omeprazole" };
 
     List<Medication> medListCheck2 = new ArrayList<Medication>(Arrays.asList(
-            new Medication("Omeprazole", "pill", 1, "Daily", 1),
+            new Medication("Omeprazole", "pill", 3, "Daily", 1),
         new Medication("Valtrex", "pill", 1, "Daily", 1),
         new Medication("Telfast", "pill", 2, "Daily", 1),
         new Medication("Antihistamine", "pill", 1, "Daily", 4),
@@ -99,6 +99,7 @@ public class AddMedActivity extends AppCompatActivity {
         new Medication("Paracetamol", "pill", 2, "Daily", 4)
     ));
 
+    Object [][] wordToNums = {{"One",1},{"two",2},{"three",3},{"four",4},{"five",5},{"six",6},{"seven",7},{"eight",8},{"nine",9},{"ten",10}};
 
     String[] excludeList = new String[]{"the", "and", "of", "in", "if", "for", "taken", "one", "twice", "two", "three", "four", "times", "daily", "mg", "ml", "keep", "out", "reach", "from", "children"};
     @Override
@@ -353,8 +354,30 @@ public class AddMedActivity extends AppCompatActivity {
                             }
                         }
 
+
+                        for(Text textLine : myItem.getComponents()) {
+
+                            if(textLine.getValue().toUpperCase().contains("TO BE TAKEN")){
+                                medDesc.setText(textLine.getValue());
+
+                                String dosage = textLine.getComponents().get(0).getValue();
+                                medDesc.setText(dosage);
+                                for(int n = 0; n < wordToNums.length; n++){
+                                    if(dosage.toUpperCase().equals(wordToNums[n][0].toString().toUpperCase())){
+
+                                        dosageAmount.setText(wordToNums[n][1].toString());
+
+                                    }
+                                }
+
+                            }
+                        }
+
                         imageText.setText(sb.toString());
                     }
+
+
+
                 }
             }
             else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
