@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.X00135794.medminder">
-
-    <!-- permissions for camera and storage-->
+    <!-- permissions for camera and storage -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -19,7 +18,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddMedActivity"/>
+        <activity android:name=".AddMedActivity" />
         <activity
             android:name=".SignupActivity"
             android:screenOrientation="portrait" />
@@ -29,7 +28,13 @@
         <activity
             android:name=".UserAccountActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".SplashScreen"
+
+        <activity android:name=".MedItemActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".UserAccountActivity"/>
+
+        <activity
+            android:name=".SplashScreen"
             android:theme="@style/SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,11 +43,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
-            android:theme="@style/AppTheme"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity" android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

@@ -4,12 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +31,8 @@ import java.util.ArrayList;
 
 public class UserAccountActivity extends AppCompatActivity {
 
+    TextView m;
+    private ListView listView;
     private TextView userDetails;
     private Button userLogout;
 
@@ -41,14 +47,41 @@ public class UserAccountActivity extends AppCompatActivity {
     private User user;
     private Button addMedBtn;
     private Button addMedPageBtn;
-
+    ArrayAdapter<Medication> adapter;
     private static final String TAG = "UserAccountActivity";
 
+    private ArrayList<Medication> medication = new ArrayList<>();
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_account);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+        //userDetails.setText(firebaseUser.getEmail());
+        docRef = db.document("users/"+ firebaseUser.getUid());
+
+        listView = findViewById(R.id.medListView);
+        m = findViewById(R.id.m);
+
+        context = UserAccountActivity.this;
+
+
+        /*
+        if(!medication.isEmpty()){
+            m.setText("Meds isnt empty");
+            adapter = new MedicationArrayAdapter(this, medication);
+            listView.setAdapter(adapter);
+        }
+        else{
+            m.setText("Meds is empty");
+            medication = user.getMedList();
+            adapter = new MedicationArrayAdapter(this, medication);
+        }
+*/
+        /*
         userDetails = findViewById(R.id.tvUserDetails);
         userLogout = findViewById(R.id.btnLogout);
         medicationList = findViewById(R.id.tvMedicationList);
@@ -57,16 +90,12 @@ public class UserAccountActivity extends AppCompatActivity {
         medDose = findViewById(R.id.etMedDosage);
         medFrq = findViewById(R.id.etMedFrq);
 
-        addMedBtn = findViewById(R.id.btnAddMed);
+        addMedBtn = findViewById(R.id.btnAddMed);*/
         addMedPageBtn = findViewById(R.id.btnGoToAddPage);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        db = FirebaseFirestore.getInstance();
-        userDetails.setText(firebaseUser.getEmail());
-        docRef = db.document("users/"+ firebaseUser.getUid());
 
 
+        /*
         userLogout.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 FirebaseAuth.getInstance().signOut();
@@ -102,6 +131,7 @@ public class UserAccountActivity extends AppCompatActivity {
             }
         });
 
+        */
         addMedPageBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 startActivity(new Intent(UserAccountActivity.this, AddMedActivity.class));
@@ -109,6 +139,20 @@ public class UserAccountActivity extends AppCompatActivity {
             }
 
         });
+
+        AdapterView.OnItemClickListener adapterViewListener = new AdapterView.OnItemClickListener(){
+
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                 Medication med = medication.get(position);
+
+                 Intent intent = new Intent(UserAccountActivity.this, MedItemActivity.class);
+                 intent.putExtra("medName", med.getMedName());
+                 intent.putExtra("medDose", med.getDosageString());
+                 startActivity(intent);
+            }
+        };
+
+        listView.setOnItemClickListener(adapterViewListener);
     }
    @Override
     protected void onStart(){
@@ -125,9 +169,14 @@ public class UserAccountActivity extends AppCompatActivity {
                 if (documentSnapshot.exists()) {
                     user = documentSnapshot.toObject(User.class);
 
-                    String fName = user.getFirstName();
-                    ArrayList<Medication> meds = user.getMedList();
-                    String content = fName + "\nMedication List\n";
+                    medication = user.getMedList();
+
+                    adapter = new MedicationArrayAdapter(context,0, medication);
+                    listView.setAdapter(adapter);
+
+                    //String fName = user.getFirstName();
+                    //ArrayList<Medication> meds = user.getMedList();
+                    /*String content = fName + "\nMedication List\n";
                     if(!meds.isEmpty()){
                         for(Medication m : meds ){
                             content += m.getMedName() + "\n";
@@ -136,6 +185,7 @@ public class UserAccountActivity extends AppCompatActivity {
                         content += "your medication list is empty";
                     }
                     medicationList.setText(content );
+                    */
 
                 }
             }
