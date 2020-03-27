@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,7 +33,6 @@ import java.util.ArrayList;
 
 public class UserAccountActivity extends AppCompatActivity {
 
-    TextView m;
     private ListView listView;
     private TextView userDetails;
     private Button userLogout;
@@ -47,6 +48,9 @@ public class UserAccountActivity extends AppCompatActivity {
     private User user;
     private Button addMedBtn;
     private Button addMedPageBtn;
+
+    private Button cancelAlarm;
+
     ArrayAdapter<Medication> adapter;
     private static final String TAG = "UserAccountActivity";
 
@@ -64,10 +68,9 @@ public class UserAccountActivity extends AppCompatActivity {
         docRef = db.document("users/"+ firebaseUser.getUid());
 
         listView = findViewById(R.id.medListView);
-        m = findViewById(R.id.m);
 
         context = UserAccountActivity.this;
-
+        cancelAlarm = findViewById(R.id.btnCancelAlarm);
 
         /*
         if(!medication.isEmpty()){
@@ -93,7 +96,19 @@ public class UserAccountActivity extends AppCompatActivity {
         addMedBtn = findViewById(R.id.btnAddMed);*/
         addMedPageBtn = findViewById(R.id.btnGoToAddPage);
 
+        cancelAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
+                Intent i = new Intent(UserAccountActivity.this, AlarmActivity.class);
+
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(UserAccountActivity.this,0,i,0);
+                alarmMgr.cancel(pendingIntent);
+                Toast.makeText(UserAccountActivity.this, "Alarm is cancled", Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
         /*
         userLogout.setOnClickListener(new View.OnClickListener(){

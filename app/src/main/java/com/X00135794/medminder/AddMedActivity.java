@@ -8,8 +8,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,6 +30,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -49,6 +53,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -72,7 +77,7 @@ public class AddMedActivity extends AppCompatActivity {
     private EditText medDesc;
     private TextInputEditText medFrq;
     private TextInputEditText medFrqRate;
-
+    private TimePicker timePicker;
 
     private static final int CAMERA_REQUEST_CODE = 200;
     private static final int STORAGE_REQUEST_CODE = 400;
@@ -126,6 +131,10 @@ public class AddMedActivity extends AppCompatActivity {
         medFrq = findViewById(R.id.medFreq);
         medFrqRate = findViewById(R.id.medFreqRate);
 
+        timePicker = findViewById(R.id.timePicker);
+
+
+
         addBtn = findViewById(R.id.btnAddMedPage);
         cameraPermission = new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -158,10 +167,31 @@ public class AddMedActivity extends AppCompatActivity {
                         });
 
 
+                Calendar calendar = Calendar.getInstance();
+                if(android.os.Build.VERSION.SDK_INT >=23){
+                    calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                            timePicker.getHour(), timePicker.getMinute(), 0);
+                }else{
+                    calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                            timePicker.getCurrentHour(), timePicker.getCurrentMinute(), 0);
+                }
+
+                setAlarm(calendar.getTimeInMillis());
                 startActivity(new Intent(AddMedActivity.this, UserAccountActivity.class));
             }
         });
 
+    }
+
+    private void setAlarm(long timeInMillis) {
+        AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent i = new Intent(this, AlarmActivity.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,i,0);
+
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, timeInMillis, AlarmManager.INTERVAL_DAY,pendingIntent);
+        Toast.makeText(this, "Alarm is set", Toast.LENGTH_SHORT).show();
     }
 
     @Override

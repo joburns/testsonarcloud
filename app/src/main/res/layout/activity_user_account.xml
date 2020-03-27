@@ -9,19 +9,30 @@
     android:fitsSystemWindows="true"
     tools:context=".UserAccountActivity"
     android:padding="3dp">
-
-    <TextView
-        android:id="@+id/m"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="40sp"
-        android:padding="3dp"/>
+        android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/medListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <Button
+            android:id="@+id/btnCancelAlarm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cancel Alarm"/>
+        <Button
+            android:id="@+id/btnGoToAddPage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add"/>
+
+        <ListView
+            android:id="@+id/medListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+
+
 
     <!--    <ScrollView
         android:layout_width="match_parent"
@@ -94,9 +105,7 @@
     </ScrollView>
 
     -->
-    <Button
-        android:id="@+id/btnGoToAddPage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add"/>
+
+
+
 </RelativeLayout>
