@@ -155,6 +155,10 @@ public class UserAccountActivity extends AppCompatActivity {
 
         });
 
+
+        // creating and AdapterView.OnItemClick listener. this will listen to your listview
+        // and when an item is clicked it will do whatever yo have in the  onItemClick part
+        // can be seperated out but I do it all in one
         AdapterView.OnItemClickListener adapterViewListener = new AdapterView.OnItemClickListener(){
 
             public void onItemClick(AdapterView<?> parent, View view, int position, long id){
@@ -167,7 +171,9 @@ public class UserAccountActivity extends AppCompatActivity {
             }
         };
 
+        // now set your listviews on click listener to the adapterViewListener you made above
         listView.setOnItemClickListener(adapterViewListener);
+
     }
    @Override
     protected void onStart(){
