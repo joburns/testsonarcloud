@@ -51,9 +51,11 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -149,7 +151,15 @@ public class AddMedActivity extends AppCompatActivity {
                 double mFrq = Double.parseDouble(medFrq.getText().toString());
                 String mFrqRate = medFrqRate.getText().toString();
 
-                Medication m = new Medication(mName,mDoseType,mDose,mFrqRate,mFrq);
+                Calendar c = Calendar.getInstance();
+                Date startDate = c.getTime();
+                // using day instead of hours and mins as we would assume they will not restart medication in the same day
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                String date = dateFormat.format(startDate);
+                String medID = mName+date;
+
+
+                Medication m = new Medication(medID,mName,mDoseType,mDose,mFrqRate,mFrq,startDate);
                 user.addMed(m);
 
                 docRef.update("medList", user.getMedList())
@@ -157,6 +167,16 @@ public class AddMedActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Log.d(TAG, "med added");
+                                Calendar calendar = Calendar.getInstance();
+                                if(android.os.Build.VERSION.SDK_INT >=23){
+                                    calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                                            timePicker.getHour(), timePicker.getMinute(), 0);
+                                }else{
+                                    calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                                            timePicker.getCurrentHour(), timePicker.getCurrentMinute(), 0);
+                                }
+
+                                setAlarm(calendar.getTimeInMillis());
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -167,16 +187,7 @@ public class AddMedActivity extends AppCompatActivity {
                         });
 
 
-                Calendar calendar = Calendar.getInstance();
-                if(android.os.Build.VERSION.SDK_INT >=23){
-                    calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
-                            timePicker.getHour(), timePicker.getMinute(), 0);
-                }else{
-                    calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
-                            timePicker.getCurrentHour(), timePicker.getCurrentMinute(), 0);
-                }
 
-                setAlarm(calendar.getTimeInMillis());
                 startActivity(new Intent(AddMedActivity.this, UserAccountActivity.class));
             }
         });
@@ -188,6 +199,7 @@ public class AddMedActivity extends AppCompatActivity {
 
         Intent i = new Intent(this, AlarmActivity.class);
 
+        i.putExtra("medName",medName.getText().toString().trim());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,i,0);
 
         alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, timeInMillis, AlarmManager.INTERVAL_DAY,pendingIntent);
