@@ -8,7 +8,8 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <androidx.appcompat.widget.Toolbar
+
+    <!--<androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,7 +25,7 @@
             android:layout_gravity="end"
             android:visibility="gone"
         />
-    </androidx.appcompat.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>-->
 
     <EditText
         android:id="@+id/etEmailLogin"

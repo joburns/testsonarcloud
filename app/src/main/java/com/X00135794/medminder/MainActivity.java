@@ -1,6 +1,7 @@
 package com.X00135794.medminder;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -17,11 +18,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
-    Toolbar toolbar;
-    ProgressBar progressbar;
+    //Toolbar toolbar;
+    //ProgressBar progressbar;
     EditText email;
     EditText password;
     Button signup;
@@ -34,14 +36,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = findViewById(R.id.toolbarLogin);
-        progressbar = findViewById(R.id.progressBar);
+        ActionBar actionBar = getSupportActionBar();
+        /// figure out way to set different menus on different pages
         email = findViewById(R.id.etEmailLogin);
         password = findViewById(R.id.etPasswordLogin);
         signup = findViewById(R.id.btnRegister);
         login = findViewById(R.id.btnLogin);
         forgotPass = findViewById(R.id.btnUserForgotPass);
-        toolbar.setTitle(R.string.app_name);
+        //toolbar.setTitle(R.string.app_name);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -55,17 +57,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         login.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                progressbar.setVisibility(View.VISIBLE);
-                if(! hasValidationErrors(email.getText().toString(),password.getText().toString())) {
+               // progressbar.setVisibility(View.VISIBLE);
                     firebaseAuth.signInWithEmailAndPassword(email.getText().toString(),
                             password.getText().toString())
                             .addOnCompleteListener((new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
-                                    progressbar.setVisibility(View.GONE);
+                                    //progressbar.setVisibility(View.GONE);
                                     if (task.isSuccessful()) {
                                         if (firebaseAuth.getCurrentUser().isEmailVerified()) {
                                             startActivity(new Intent(MainActivity.this, UserAccountActivity.class));
@@ -77,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                             }));
-                }
             }
         });
 
@@ -90,22 +91,5 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private boolean hasValidationErrors(String uEmail, String uPassword) {
-        if (uEmail.isEmpty()) {
-            email.setError("Email is required");
-            email.requestFocus();
-            return true;
-        }
-        if(Patterns.EMAIL_ADDRESS.matcher(uEmail).matches()){
-            email.setError("Enter valid Email");
-            email.requestFocus();
-            return true;
-        }
-        if (uPassword.isEmpty()) {
-            password.setError("Password is required");
-            password.requestFocus();
-            return true;
-        }
-        return false;
-    }
+
 }
