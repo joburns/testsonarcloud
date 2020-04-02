@@ -10,6 +10,8 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+import java.util.Date;
+
 public class AlarmActivity  extends BroadcastReceiver {
 
     private NotificationManager notifyMgr;
@@ -20,6 +22,11 @@ public class AlarmActivity  extends BroadcastReceiver {
 
         Log.d("MyAlarm", "Alarm just fired");
         String med = intent.getStringExtra("medName");
+        String dose = intent.getStringExtra("medDose");
+        String desc = intent.getStringExtra("medDesc");
+        Date date =  new Date();
+        date.setTime(intent.getLongExtra("medStartDate", -1));
+        int requestCode = intent.getIntExtra("rCode",0);
         notifyMgr = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("MedminderID",
@@ -35,8 +42,16 @@ public class AlarmActivity  extends BroadcastReceiver {
                 .setAutoCancel(true); // clear notification after click
 
 
-        Intent i = new Intent(context, UserAccountActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent i = new Intent(context, MedItemActivity.class);
+
+        i.putExtra("medName",med);
+        i.putExtra("medDosage",dose);
+        i.putExtra("medDesc",desc);
+        i.putExtra("medStartDate",date);
+        i.putExtra("rCode",requestCode);
+
+
+        PendingIntent pi = PendingIntent.getActivity(context, requestCode, i, PendingIntent.FLAG_UPDATE_CURRENT);
         mBuilder.setContentIntent(pi);
         notifyMgr.notify(0, mBuilder.build());
     }

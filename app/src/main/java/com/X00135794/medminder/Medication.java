@@ -1,5 +1,6 @@
 package com.X00135794.medminder;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Medication {
@@ -10,8 +11,8 @@ public class Medication {
     private double dosage, frequency;
     private boolean active;
     private Date statDate;
-
-    //may add alarm request  inorder for deletion
+    private ArrayList<Integer> alarmRequestCodes;
+    private String description;
 
     public Medication() {
 
@@ -26,7 +27,7 @@ public class Medication {
         this.frequency = frequency;
         this.active = true;
     }
-    public Medication(String medId, String medName, String dosageType, double dosage, String freqRate, double frequency, Date startDate) {
+    public Medication(String medId, String medName, String dosageType, double dosage, String freqRate, double frequency, Date startDate, String description, ArrayList<Integer> alarmRequestCodes) {
         this.medId = medId;
         this.medName = medName;
         this.dosageType = dosageType;
@@ -35,6 +36,8 @@ public class Medication {
         this.frequency = frequency;
         this.active = true;
         this.statDate = startDate;
+        this.description = description;
+        this.alarmRequestCodes = alarmRequestCodes;
     }
 
     public String getMedId() { return medId; }
@@ -88,4 +91,24 @@ public class Medication {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+
+    public ArrayList<Integer> getAlarmRequestCodes() {return alarmRequestCodes; }
+
+    public void setAlarmRequestCodes(ArrayList<Integer> alarmRequestCodes) { this.alarmRequestCodes = alarmRequestCodes;  }
+
+    public Date getStatDate() { return statDate; }
+
+    public void setStatDate(Date statDate) { this.statDate = statDate;  }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
+
 }

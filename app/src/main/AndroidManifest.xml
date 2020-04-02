@@ -19,7 +19,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddMedActivity" />
         <activity
             android:name=".SignupActivity"
             android:screenOrientation="portrait" />
@@ -34,6 +33,9 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".UserAccountActivity"/>
 
+        <activity android:name=".AddMedActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".UserAccountActivity"/>
         <activity
             android:name=".SplashScreen"
             android:theme="@style/SplashScreen">

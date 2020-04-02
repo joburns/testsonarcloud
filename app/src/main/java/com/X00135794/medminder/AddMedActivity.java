@@ -40,7 +40,6 @@ import com.google.android.gms.vision.text.Text;
 import com.google.android.gms.vision.text.TextBlock;
 import com.google.android.gms.vision.text.TextRecognizer;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -73,7 +72,6 @@ public class AddMedActivity extends AppCompatActivity {
     Button addBtn;
     private TextInputEditText medName;
 
-    //EditText medName;
     private TextInputEditText dosageAmount;
     private TextInputEditText dosageType;
     private EditText medDesc;
@@ -81,6 +79,8 @@ public class AddMedActivity extends AppCompatActivity {
     private TextInputEditText medFrqRate;
     private TimePicker timePicker;
 
+    private Date startDate;
+    private Medication med;
     private static final int CAMERA_REQUEST_CODE = 200;
     private static final int STORAGE_REQUEST_CODE = 400;
     private static final int IMG_PICK_GALLERY_CODE = 1000;
@@ -115,6 +115,8 @@ public class AddMedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_med);
 
         ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Add Medication");
         actionBar.setSubtitle("Click Image button to insert Image");
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -152,15 +154,18 @@ public class AddMedActivity extends AppCompatActivity {
                 String mFrqRate = medFrqRate.getText().toString();
 
                 Calendar c = Calendar.getInstance();
-                Date startDate = c.getTime();
+                startDate = c.getTime();
                 // using day instead of hours and mins as we would assume they will not restart medication in the same day
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
                 String date = dateFormat.format(startDate);
                 String medID = mName+date;
 
+                final int requestCode = user.getMedList().size();
+                ArrayList<Integer>alarmRequestcodes = new ArrayList<Integer>();
+                alarmRequestcodes.add(requestCode);
 
-                Medication m = new Medication(medID,mName,mDoseType,mDose,mFrqRate,mFrq,startDate);
-                user.addMed(m);
+                med = new Medication(medID,mName,mDoseType,mDose,mFrqRate,mFrq,startDate, medDes, alarmRequestcodes);
+                user.addMed(med);
 
                 docRef.update("medList", user.getMedList())
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -176,7 +181,7 @@ public class AddMedActivity extends AppCompatActivity {
                                             timePicker.getCurrentHour(), timePicker.getCurrentMinute(), 0);
                                 }
 
-                                setAlarm(calendar.getTimeInMillis());
+                                setAlarm(calendar.getTimeInMillis(), requestCode);
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -194,13 +199,17 @@ public class AddMedActivity extends AppCompatActivity {
 
     }
 
-    private void setAlarm(long timeInMillis) {
+    private void setAlarm(long timeInMillis, int requestCode) {
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         Intent i = new Intent(this, AlarmActivity.class);
 
         i.putExtra("medName",medName.getText().toString().trim());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,i,0);
+        i.putExtra("medDosage",dosageAmount.getText().toString().trim());
+        i.putExtra("medDesc",medDesc.getText().toString().trim());
+        i.putExtra("medStartDate",startDate);
+        i.putExtra("rCode",requestCode);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,requestCode,i,PendingIntent.FLAG_UPDATE_CURRENT);
 
         alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, timeInMillis, AlarmManager.INTERVAL_DAY,pendingIntent);
         Toast.makeText(this, "Alarm is set", Toast.LENGTH_SHORT).show();
@@ -220,7 +229,10 @@ public class AddMedActivity extends AppCompatActivity {
             showImageImportDialog();
         }
         if(id == R.id.settings){
+
             Toast.makeText(this,"Setting", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(this, ForgottenPasswordActivity.class);
+            startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -417,9 +429,6 @@ public class AddMedActivity extends AppCompatActivity {
 
                         imageText.setText(sb.toString());
                     }
-
-
-
                 }
             }
             else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
